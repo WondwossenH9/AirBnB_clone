@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 """
-This module defines the BaseModel class, which serves as the base class for all
-other model classes, providing common attributes/methods.
+This module defines the BaseModel class,
+which serves as the base class for all
+other model classes, providing
+common attributes/methods.
 """
 
 from uuid import uuid4
@@ -11,16 +13,16 @@ from datetime import datetime
 class BaseModel:
     """
     BaseModel defines common attributes and methods for other classes.
-
-    Attributes are set dynamically via the __init__ method, allowing for
-    instantiation from a dictionary representation.
+    Attributes are set dynamically via the __init__ method,
+    allowing for instantiation from a dictionary representation.
     """
 
     def __init__(self, *args, **kwargs):
         """
         Initializes a new instance of BaseModel. If kwargs is provided,
-        sets attributes according to key-value pairs within, excluding '__class__'.
-        Otherwise, generates a new id and sets created_at and updated_at.
+        sets attributes according to key-value pairs within,
+        excluding '__class__'. Otherwise, generates a new id
+        and sets created_at and updated_at.
         """
         if kwargs:
             for key, value in kwargs.items():
@@ -50,8 +52,9 @@ class BaseModel:
 
     def to_dict(self):
         """
-        Returns a dictionary containing all keys/values of the instance's __dict__,
-        including the class name under '__class__' and converting datetime attributes
+        Returns a dictionary containing all keys/values of
+        the instance's __dict__, including the class name
+        under '__class__' and converting datetime attributes
         to strings in ISO format.
         """
         dict_rep = self.__dict__.copy()
