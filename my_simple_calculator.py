@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """
-This module defines a SimpleCalculator class that performs basic arithmetic operations.
+This module defines a SimpleCalculator class
+that performs basic arithmetic operations.
 """
 
 
