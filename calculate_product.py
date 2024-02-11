@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 def calculate_product(m, n):
     return m * n
 
