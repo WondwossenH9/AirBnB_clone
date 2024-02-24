@@ -1,19 +1,23 @@
 #!/usr/bin/python3
 """
-Updated command interpreter to manage your application's objects.
+Command interpreter module for managing application objects.
 """
 
 import cmd
 from models import storage
 from models.base_model import BaseModel
+from models.user import User
 from shlex import split
 
 class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
-    class_names = ["BaseModel"]
+    class_dict = {
+        "BaseModel": BaseModel,
+        "User": User,
+    }
 
     def do_quit(self, arg):
-        """Quits the command to exit the program"""
+        """Quits command to exit program"""
         return True
 
     def do_EOF(self, arg):
@@ -22,29 +26,29 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def emptyline(self):
-        """Do nothing on empty input line"""
+        """Do nothing upon receiving empty line."""
         pass
 
     def do_create(self, arg):
-        """Creates a new instance of BaseModel, saves it, and prints the id."""
+        """Creates new instance of BaseModel, saves it to the JSON file, and prints the id."""
         args = split(arg)
         if not args:
             print("** class name missing **")
             return
-        if args[0] not in self.class_names:
+        if args[0] not in self.class_dict:
             print("** class doesn't exist **")
             return
-        new_instance = BaseModel()
+        new_instance = self.class_dict[args[0]]()
         new_instance.save()
         print(new_instance.id)
 
     def do_show(self, arg):
-        """Prints the string representation of an instance based on class name and id."""
+        """Shows the string representation of an instance based on class name and id."""
         args = split(arg)
         if not args:
             print("** class name missing **")
             return
-        if args[0] not in self.class_names:
+        if args[0] not in self.class_dict:
             print("** class doesn't exist **")
             return
         if len(args) < 2:
@@ -62,7 +66,7 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        if args[0] not in self.class_names:
+        if args[0] not in self.class_dict:
             print("** class doesn't exist **")
             return
         if len(args) < 2:
@@ -76,16 +80,12 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
 
     def do_all(self, arg):
-        """Prints all string representation of all instances based or not on class name."""
+        """Prints all string representations of all instances based or not on class name."""
         args = split(arg)
-        if args and args[0] not in self.class_names:
+        if args and args[0] not in self.class_dict:
             print("** class doesn't exist **")
             return
-        objects = storage.all()
-        print_list = []
-        for key in objects:
-            if not args or args[0] == objects[key].__class__.__name__:
-                print_list.append(str(objects[key]))
+        print_list = [str(obj) for key, obj in storage.all().items() if not args or key.startswith(args[0])]
         print(print_list)
 
     def do_update(self, arg):
@@ -94,7 +94,7 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        if args[0] not in self.class_names:
+        if args[0] not in self.class_dict:
             print("** class doesn't exist **")
             return
         if len(args) < 2:
@@ -110,8 +110,9 @@ class HBNBCommand(cmd.Cmd):
         if key not in storage.all():
             print("** no instance found **")
             return
-        setattr(storage.all()[key], args[2], args[3])
-        storage.all()[key].save()
+        instance = storage.all()[key]
+        setattr(instance, args[2], args[3])
+        instance.save()
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
