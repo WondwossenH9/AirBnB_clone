@@ -1,23 +1,22 @@
 #!/usr/bin/python3
 """
-Updated module to define the BaseModel class to
-support creation from dictionary representation.
+Updated BaseModel to support serialization and deserialization,
+and to work with FileStorage.
 """
 
 import uuid
 from datetime import datetime
+from models import storage
 
 class BaseModel:
     """
-    Defines base model with common attributes and methods for other classes.
-    Also supports initialization from a dictionary.
+    BaseModel class updated to support creating instances from dictionaries
+    and integrating with FileStorage.
     """
 
     def __init__(self, *args, **kwargs):
         """
-        Initializes a new instance of BaseModel.Dynamic initialization
-        from a dictionary through **kwargs, ignoring '__class__' key and converting
-        datetime strings back to datetime objects for 'created_at' and 'updated_at'.
+        Initializes a new instance from a dictionary.
         """
         if kwargs:
             for key, value in kwargs.items():
@@ -29,6 +28,7 @@ class BaseModel:
         else:
             self.id = str(uuid.uuid4())
             self.created_at = self.updated_at = datetime.now()
+            storage.new(self)
 
     def __str__(self):
         """
@@ -38,15 +38,14 @@ class BaseModel:
 
     def save(self):
         """
-        Updates the 'updated_at' attribute with current datetime.
+        Updates `updated_at` and saves the instance to the file storage.
         """
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         """
-        Returns a dictionary containing all keys/values of __dict__ of the instance,
-        with datetime attributes converted to strings in ISO format and adding the
-        '__class__' key with class name of the object.
+        Returns a dictionary containing all keys/values of the instance.
         """
         dict_rep = self.__dict__.copy()
         dict_rep["__class__"] = self.__class__.__name__
