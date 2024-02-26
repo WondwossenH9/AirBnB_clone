@@ -1,0 +1,39 @@
+#!/usr/bin/python3
+"""Unit test for the User class."""
+import unittest
+from models.user import User
+
+class TestUser(unittest.TestCase):
+    """Test cases for the User class."""
+
+    def test_email(self):
+        """Test email attribute."""
+        u = User()
+        self.assertEqual(u.email, "")
+        u.email = "test@example.com"
+        self.assertEqual(u.email, "test@example.com")
+
+    def test_password(self):
+        """Test password attribute."""
+        u = User()
+        self.assertEqual(u.password, "")
+        u.password = "root"
+        self.assertEqual(u.password, "root")
+
+    def test_first_name(self):
+        """Test first_name attribute."""
+        u = User()
+        self.assertEqual(u.first_name, "")
+        u.first_name = "John"
+        self.assertEqual(u.first_name, "John")
+
+    def test_last_name(self):
+        """Test last_name attribute."""
+        u = User()
+        self.assertEqual(u.last_name, "")
+        u.last_name = "Doe"
+        self.assertEqual(u.last_name, "Doe")
+
+if __name__ == '__main__':
+    unittest.main()
+
